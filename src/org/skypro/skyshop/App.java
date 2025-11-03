@@ -1,20 +1,21 @@
 package org.skypro.skyshop;
 
 import org.skypro.skyshop.basket.ProductBasket;
+import org.skypro.skyshop.product.DiscountedProduct;
+import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
+import org.skypro.skyshop.product.SimpleProduct;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
 public class App {
     public static void main(String[] args) {
         System.out.println("демонстрация работы корзины покупок");
         System.out.println("создание продуктов для демонстрации");
-        Product apple = new Product("Яблоко", 50);
-        Product bread = new Product("Хлеб", 40);
-        Product milk = new Product("Молоко", 80);
-        Product cheese = new Product("Сыр", 200);
-        Product butter = new Product("Масло", 120);
-        Product juice = new Product("Сок", 90); // Шестой продукт для демонстрации переполнения
+        Product apple = new DiscountedProduct("Яблоко", 50, 50);
+        Product bread = new DiscountedProduct("Хлеб", 40, 10);
+        Product milk = new FixPriceProduct("Молоко");
+        Product cheese = new SimpleProduct("Сыр", 200);
+        Product butter = new SimpleProduct("Масло", 120);
+        Product juice = new SimpleProduct("Сок", 90);
 
         System.out.println("создаём корзину");
         ProductBasket basket = new ProductBasket();
@@ -27,7 +28,7 @@ public class App {
         basket.addProduct(butter);
 
         System.out.println("2.	Добавление продукта в заполненную корзину, в которой нет свободного места.");
-        basket.addProduct(juice);//должно появиться сообщение об ошибке
+        basket.addProduct(juice);
 
         System.out.println("3.	Печать содержимого корзины с несколькими товарами.");
         basket.printBasketContents();
@@ -45,6 +46,7 @@ public class App {
         System.out.println("Результат поиска " + hasSausage);
 
         System.out.println("7.	Очистка корзины.");
+        basket.clearBasket();
         basket.printBasketContents();
 
         System.out.println("8.	Печать содержимого пустой корзины.");
