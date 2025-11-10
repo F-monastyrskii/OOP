@@ -4,7 +4,7 @@ public class SearchEngene {
     private final Searchable[] searchables;
     private int count;
 
-    public SearchEngene(int capacity) {
+    public SearchEngene(int capacity) throws BestResultNotFound {
         this.searchables = new Searchable[capacity];
         this.count = 0;
     }
@@ -31,5 +31,40 @@ public class SearchEngene {
         }
 
         return results;
+    }
+
+    public Searchable findBestMatch(String searchQuery) throws BestResultNotFound {
+        if (count == 0) {
+            throw new BestResultNotFound(searchQuery);
+        }
+
+        Searchable bestMatch = null;
+        int maxCount = -1;
+
+        for (int i = 0; i < count; i++) {
+            Searchable current = searchables[i];
+            String searchTerm = current.getSearchTerm().toLowerCase();
+            String query = searchQuery.toLowerCase();
+
+            int count = countOccurrences(searchTerm, query);
+
+            if (count > maxCount) {
+                maxCount = count;
+                bestMatch = current;
+            }
+
+            if (maxCount == 0) {
+                throw new BestResultNotFound(searchQuery);
+            }
+            return bestMatch;
+        }
+        return bestMatch;
+    }
+
+    private int countOccurrences(String text, String subString) {
+        if (text == null || subString == null || subString.isEmpty()) {
+            return 0;
+        }
+        return 0;
     }
 }
