@@ -6,6 +6,9 @@ public abstract class Product implements Searchable {
     protected String name;
 
     public Product(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Имя продукта не может быть пустым или состоять только из пробелов");
+        }
         this.name = name;
     }
 
@@ -16,6 +19,9 @@ public abstract class Product implements Searchable {
     public abstract int getPrice();
 
     public void setName(String name) {
+        if (name == null || name.isBlank()) {
+            throw new IllegalArgumentException("Имя продукта не может быть пустым или состоять только из пробелов");
+        }
         this.name = name;
     }
 
