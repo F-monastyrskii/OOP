@@ -4,7 +4,7 @@ public class SearchEngene {
     private final Searchable[] searchables;
     private int count;
 
-    public SearchEngene(int capacity) throws BestResultNotFound {
+    public SearchEngene(int capacity) {
         this.searchables = new Searchable[capacity];
         this.count = 0;
     }
