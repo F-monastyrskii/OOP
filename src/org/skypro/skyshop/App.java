@@ -6,11 +6,12 @@ import org.skypro.skyshop.product.DiscountedProduct;
 import org.skypro.skyshop.product.FixPriceProduct;
 import org.skypro.skyshop.product.Product;
 import org.skypro.skyshop.product.SimpleProduct;
+import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngene;
 import org.skypro.skyshop.search.Searchable;
 
 public class App {
-    public static void main(String[] args) {
+    public static void main(String[] args) throws BestResultNotFound {
         System.out.println("демонстрация работы корзины покупок");
         System.out.println("создание продуктов для демонстрации");
         Product apple = new DiscountedProduct("Яблоко", 50, 50);
@@ -105,6 +106,134 @@ public class App {
         Searchable[] results5 = searchEngene.search("молоко");
         printSearchResults(results5);
 
+        System.out.println("\n Тестирование проверок в продуктах");
+
+        System.out.println(" Создаём продукт с именем null: ");
+        try {
+            Product nullNameProduct = new SimpleProduct(null, 100 );
+            System.out.println("Успешно создан " +  nullNameProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(" Создаём продукты с именем из пробелов: ");
+        try {
+            Product spacesNameProduct = new SimpleProduct("    ", 100 );
+            System.out.println("Успешно создан " +  spacesNameProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(" Создаём продукты с пустой строкой в имени: ");
+        try {
+            Product emptyNameProduct = new SimpleProduct("", 100 );
+            System.out.println("Успешно создан " +  emptyNameProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Создаём обычные продукты с неправильной ценой");
+
+        System.out.println("Создаём продукт с ценой 0");
+        try {
+            Product zeroPriceProduct = new SimpleProduct("нулевая цена", 0);
+            System.out.println("Успешно создан" + zeroPriceProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Создаём продукт с ценой ниже нуля");
+        try {
+            Product negativePriceProduct = new SimpleProduct("отрицательная цена", -70);
+            System.out.println("Успешно создан" + negativePriceProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Создаём уценённые товары с некорректными данными");
+
+        System.out.println("Создаём уценённый товар с базовой ценой 0");
+        try {
+            Product zeroBasePriceProduct = new DiscountedProduct ("нулевая базовая цена", 0, 20);
+            System.out.println("Успешно создан" + zeroBasePriceProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Создаём уценённый товар с отрицательной базовой ценой 0");
+        try {
+            Product negativeBasePriceProduct = new DiscountedProduct ("отрицательная базовая цена", -20, 20);
+            System.out.println("Успешно создан" + negativeBasePriceProduct);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Создаём уценённый товар с отрицательной скидкой");
+        try {
+            Product negativeDiscount = new DiscountedProduct ("отрицательная скидка", 20, -20);
+            System.out.println("Успешно создан" + negativeDiscount);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println("Создаём уценённый товар со скидкой более 100 процентов");
+        try {
+            Product tooBigDiscount = new DiscountedProduct ("скидка более 100 процентов", 20, 120);
+            System.out.println("Успешно создан" + tooBigDiscount);
+        } catch (IllegalArgumentException e) {
+            System.out.println(e.getMessage());
+        }
+
+        System.out.println(" \nТестирование поиска наиболее подходящего элемента");
+        System.out.println("Создаём движок и добавляем тестовые данные: ");
+
+        SearchEngene searchEngine = new SearchEngene(50);
+
+        searchEngine.add(new SimpleProduct("Яблоко красное сладкое", 50));
+        searchEngine.add(new SimpleProduct("Яблоко зелёное кислое", 40));
+        searchEngine.add(new SimpleProduct("Банан солёный", 30));
+        searchEngine.add(new SimpleProduct("Хлеб пресный", 20));
+        searchEngine.add(new SimpleProduct("Хлеб ржаной", 40));
+
+        searchEngine.add(new Article("Рецепт яблочного пирога", "Для пирога понадобятся: Яблоко красное сладкое, мука, сахар. Яблоко порезать и очистить..."));
+        searchEngine.add(new Article("Польза хлеба для здоровья", "Хлеб ржаной невероятно полезен для пищеварения"));
+        searchEngine.add(new Article("Использование зеленого яблока", "Мало кто знает, что самым первым слоем в салате 'сельдь под шубой' может удачно стать яблоко зеленое кислое. Реально хорошо сочетается"));
+
+        System.out.println("Поиск по слову 'яблоко'");
+        try {
+            Searchable bestMatch1 = searchEngine.findBestMatch("яблоко");
+            System.out.println("Найден лучший результат: " + bestMatch1.getStringRepresentation());
+            System.out.println(" Search term: " + bestMatch1.getSearchTerm());
+        } catch (BestResultNotFound e) {
+            System.out.println(" Ошибка: "+ e.getMessage());
+        }
+
+        System.out.println("Поиск по слову 'хлеб'");
+        try {
+            Searchable bestMatch2 = searchEngine.findBestMatch("хлеб");
+            System.out.println("Найден лучший результат: " + bestMatch2.getStringRepresentation());
+            System.out.println(" Search term: " + bestMatch2.getSearchTerm());
+        } catch (BestResultNotFound e) {
+            System.out.println(" Ошибка: "+ e.getMessage());
+        }
+
+        System.out.println("Поиск по слову 'банан'");
+        try {
+            Searchable bestMatch3 = searchEngine.findBestMatch("банан");
+            System.out.println("Найден лучший результат: " + bestMatch3.getStringRepresentation());
+            System.out.println(" Search term: " + bestMatch3.getSearchTerm());
+        }catch (BestResultNotFound e) {
+            System.out.println(" Ошибка: "+ e.getMessage());
+        }
+
+        System.out.println("Поиск по слову 'крем'");
+        try {
+            Searchable bestMatch4 = searchEngine.findBestMatch("крем");
+            System.out.println("Найден лучший результат: " + bestMatch4.getStringRepresentation());
+            System.out.println(" Search term: " + bestMatch4.getSearchTerm());
+        }catch (BestResultNotFound e) {
+            System.out.println(" Ошибка: "+ e.getMessage());
+        }
     }
 
     private static void printSearchResults(Searchable[] results) {

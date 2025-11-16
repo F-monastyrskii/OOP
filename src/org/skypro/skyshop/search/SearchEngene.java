@@ -32,4 +32,44 @@ public class SearchEngene {
 
         return results;
     }
+
+    public Searchable findBestMatch(String searchQuery) throws BestResultNotFound {
+        Searchable bestMatch = null;
+        int maxCount = -1;
+
+        for (Searchable current : searchables) {
+            if (current == null)
+                continue;
+
+            String searchTerm = current.getSearchTerm().toLowerCase();
+            String query = searchQuery.toLowerCase();
+
+            int count = countOccurrences(searchTerm, query);
+            if (count > maxCount) {
+                maxCount = count;
+                bestMatch = current;
+            }
+        }
+
+        if (maxCount == 0) {
+            throw new BestResultNotFound(searchQuery);
+        }
+
+        return bestMatch;
+    }
+
+    private int countOccurrences(String text, String subString) {
+        if (text == null || subString == null || subString.isEmpty() || text.isEmpty()) {
+            return 0;
+        }
+        int index = 0;
+        int indexOfSubstring = text.indexOf(subString, index);
+        while (indexOfSubstring != -1) {
+            count++;
+            index = indexOfSubstring + subString.length();
+            indexOfSubstring = subString.indexOf(index);
+        }
+        return index;
+    }
+
 }
