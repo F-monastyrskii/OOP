@@ -65,7 +65,7 @@ public class App {
         System.out.println(" Результат поиска: " + hasMilkInEmpty);
 
         System.out.println("Демонстрация работы поисковой системы! создание движка");
-        SearchEngene searchEngene = new SearchEngene(5);
+        SearchEngene searchEngene = new SearchEngene();
 
         System.out.println("Добавление товаров в поисковой движок");
         searchEngene.add(apple);
@@ -187,7 +187,7 @@ public class App {
         System.out.println(" \nТестирование поиска наиболее подходящего элемента");
         System.out.println("Создаём движок и добавляем тестовые данные: ");
 
-        SearchEngene searchEngine = new SearchEngene(50);
+        SearchEngene searchEngine = new SearchEngene();
 
         searchEngine.add(new SimpleProduct("Яблоко красное сладкое", 50));
         searchEngine.add(new SimpleProduct("Яблоко зелёное кислое", 40));
@@ -258,17 +258,17 @@ public class App {
         basket.printBasketContents();
 
     }
-    private static void printHistoryRemovedProducts(List<String> lst) {
-        if (lst == null){
+    private static void printHistoryRemovedProducts(List<String> RemovedProductslist) {
+        if (RemovedProductslist == null){
             System.out.println("удаление невозможно");
             return;
         }
-        if (lst.isEmpty()){
+        if (RemovedProductslist.isEmpty()){
             System.out.println("Список пуст");
             return;
         }
         System.out.println("история удаления " );
-        for (String name : lst) {
+        for (String name : RemovedProductslist) {
             System.out.println(name);
         }
     }
