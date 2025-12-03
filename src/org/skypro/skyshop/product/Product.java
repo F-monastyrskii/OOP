@@ -3,7 +3,7 @@ package org.skypro.skyshop.product;
 import org.skypro.skyshop.search.Searchable;
 
 public abstract class Product implements Searchable {
-    protected String name;
+    private String name;
 
     public Product(String name) {
         if (name == null || name.isBlank()) {

@@ -1,36 +1,33 @@
 package org.skypro.skyshop.search;
 
+import java.util.LinkedList;
+import java.util.List;
+
 public class SearchEngene {
-    private final Searchable[] searchables;
+    private final LinkedList<Searchable> searchables;
     private int count;
 
-    public SearchEngene(int capacity) {
-        this.searchables = new Searchable[capacity];
-        this.count = 0;
+    public SearchEngene() {
+        this.searchables = new LinkedList<>();
     }
 
     public void add(Searchable searchable) {
-        if (count < searchables.length) {
-            searchables[count] = searchable;
-            count++;
-        } else {
-            System.out.println("Поисковый движок заполнен");
-        }
+        searchables.add(searchable);
     }
 
     public Searchable[] search(String query) {
-        Searchable[] results = new Searchable[5];
-        int resultsCount = 0;
+        List<Searchable> resultsList = new LinkedList<>();
 
-        for (int i = 0; i < count && resultsCount < 5; i++) {
-            Searchable current = searchables[i];
+        for (Searchable current : searchables) {
             if (current.getSearchTerm().toLowerCase().contains(query.toLowerCase())) {
-                results[resultsCount] = current;
-                resultsCount++;
+                resultsList.add(current);
+                if (resultsList.size() >= 5) {
+                    break;
+                }
             }
         }
 
-        return results;
+        return resultsList.toArray(new Searchable[0]);
     }
 
     public Searchable findBestMatch(String searchQuery) throws BestResultNotFound {
@@ -38,9 +35,6 @@ public class SearchEngene {
         int maxCount = -1;
 
         for (Searchable current : searchables) {
-            if (current == null)
-                continue;
-
             String searchTerm = current.getSearchTerm().toLowerCase();
             String query = searchQuery.toLowerCase();
 
@@ -51,7 +45,7 @@ public class SearchEngene {
             }
         }
 
-        if (maxCount == 0) {
+        if (maxCount == 0 || bestMatch == null) {
             throw new BestResultNotFound(searchQuery);
         }
 
@@ -62,14 +56,15 @@ public class SearchEngene {
         if (text == null || subString == null || subString.isEmpty() || text.isEmpty()) {
             return 0;
         }
+        int occurrences = 0;
         int index = 0;
         int indexOfSubstring = text.indexOf(subString, index);
         while (indexOfSubstring != -1) {
-            count++;
+            occurrences++;
             index = indexOfSubstring + subString.length();
-            indexOfSubstring = subString.indexOf(index);
+            indexOfSubstring = text.indexOf(subString, index);
         }
-        return index;
+        return occurrences;
     }
 
 }
