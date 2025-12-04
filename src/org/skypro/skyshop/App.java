@@ -10,8 +10,8 @@ import org.skypro.skyshop.search.BestResultNotFound;
 import org.skypro.skyshop.search.SearchEngene;
 import org.skypro.skyshop.search.Searchable;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class App {
     public static void main(String[] args) throws BestResultNotFound {
@@ -87,24 +87,24 @@ public class App {
         System.out.println("Демонстрация поиска");
 
         System.out.println("Ищем по слову 'яблоко'");
-        Searchable[] results1 = searchEngene.search("яблоко");
-        printSearchResults(results1);
+        Map<String, Searchable> results1 = searchEngene.search("яблоко");
+        printSearchResultsMap(results1);
 
         System.out.println("Ищем по слову 'хлеб'");
-        Searchable[] results2 = searchEngene.search("хлеб");
-        printSearchResults(results2);
+        Map<String, Searchable> results2 = searchEngene.search("хлеб");
+        printSearchResultsMap(results2);
 
         System.out.println("Ищем по слову 'продукты'");
-        Searchable[] results3 = searchEngene.search("продукты");
-        printSearchResults(results3);
+        Map<String, Searchable> results3 = searchEngene.search("продукты");
+        printSearchResultsMap(results3);
 
         System.out.println("Ищем по слову 'сыр'");
-        Searchable[] results4 = searchEngene.search("сыр");
-        printSearchResults(results4);
+        Map<String, Searchable> results4 = searchEngene.search("сыр");
+        printSearchResultsMap(results4);
 
         System.out.println("Ищем по слову 'молоко'");
-        Searchable[] results5 = searchEngene.search("молоко");
-        printSearchResults(results5);
+        Map<String, Searchable> results5 = searchEngene.search("молоко");
+        printSearchResultsMap(results5);
 
         System.out.println("\n Тестирование проверок в продуктах");
 
@@ -258,7 +258,7 @@ public class App {
         basket.printBasketContents();
 
     }
-    private static void printHistoryRemovedProducts(List<String> RemovedProductslist) {
+    private static void printHistoryRemovedProducts(List<Product> RemovedProductslist) {
         if (RemovedProductslist == null){
             System.out.println("удаление невозможно");
             return;
@@ -268,22 +268,29 @@ public class App {
             return;
         }
         System.out.println("история удаления " );
-        for (String name : RemovedProductslist) {
+        for (Product name : RemovedProductslist) {
             System.out.println(name);
         }
     }
 
 
-    private static void printSearchResults(Searchable[] results) {
-        boolean haveBeenFound = false;
-        for (int i = 0; i < results.length; i++) {
-            if (results[i] != null) {
-                System.out.println((i + 1) + ". " + results[i].getStringRepresentation());
-                haveBeenFound = true;
-            }
+    private static void printSearchResultsMap(Map<String, Searchable> results) {
+        if (results.isEmpty()) {
+            System.out.println("Ничего не найдено");
+            return;
         }
-        if (!haveBeenFound) {
-            System.out.println("не найдено");
+
+        System.out.println("Найдено результатов: " + results.size());
+        System.out.println("Результаты (отсортированы по имени):");
+
+        for (Map.Entry<String, Searchable> entry : results.entrySet()) {
+            String name = entry.getKey();
+            Searchable searchable = entry.getValue();
+            System.out.println("  • " + name + " [" + searchable.getContentType() + "]");
+            System.out.println("    Поисковый термин: " +
+                    (searchable.getSearchTerm().length() > 50 ?
+                            searchable.getSearchTerm().substring(0, 50) + "..." :
+                            searchable.getSearchTerm()));
         }
     }
 

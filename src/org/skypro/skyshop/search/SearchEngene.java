@@ -2,6 +2,8 @@ package org.skypro.skyshop.search;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 public class SearchEngene {
     private final LinkedList<Searchable> searchables;
@@ -12,22 +14,20 @@ public class SearchEngene {
     }
 
     public void add(Searchable searchable) {
+        if (searchable == null) {
+            throw new IllegalArgumentException("Cannot add empty element");
+        }
         searchables.add(searchable);
     }
 
-    public Searchable[] search(String query) {
-        List<Searchable> resultsList = new LinkedList<>();
-
-        for (Searchable current : searchables) {
-            if (current.getSearchTerm().toLowerCase().contains(query.toLowerCase())) {
-                resultsList.add(current);
-                if (resultsList.size() >= 5) {
-                    break;
-                }
+    public Map<String, Searchable> search(String searchString) {
+        Map<String, Searchable> result = new TreeMap<>();
+        for (Searchable searchable : searchables) {
+            if (searchable.getSearchTerm().contains(searchString)) {
+                result.put(searchable.getName(), searchable);
             }
         }
-
-        return resultsList.toArray(new Searchable[0]);
+        return result;
     }
 
     public Searchable findBestMatch(String searchQuery) throws BestResultNotFound {
