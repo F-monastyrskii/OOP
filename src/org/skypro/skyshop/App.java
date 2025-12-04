@@ -12,6 +12,7 @@ import org.skypro.skyshop.search.Searchable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class App {
     public static void main(String[] args) throws BestResultNotFound {
@@ -87,24 +88,24 @@ public class App {
         System.out.println("Демонстрация поиска");
 
         System.out.println("Ищем по слову 'яблоко'");
-        Map<String, Searchable> results1 = searchEngene.search("яблоко");
-        printSearchResultsMap(results1);
+        Set<Searchable> result1 = searchEngene.search("яблоко");
+        printSearchResultsSet(result1);
 
         System.out.println("Ищем по слову 'хлеб'");
-        Map<String, Searchable> results2 = searchEngene.search("хлеб");
-        printSearchResultsMap(results2);
+        Set<Searchable> result2 = searchEngene.search("хлеб");
+        printSearchResultsSet(result2);
 
         System.out.println("Ищем по слову 'продукты'");
-        Map<String, Searchable> results3 = searchEngene.search("продукты");
-        printSearchResultsMap(results3);
+        Set<Searchable> result3 = searchEngene.search("продукты");
+        printSearchResultsSet(result3);
 
         System.out.println("Ищем по слову 'сыр'");
-        Map<String, Searchable> results4 = searchEngene.search("сыр");
-        printSearchResultsMap(results4);
+        Set<Searchable> result4 = searchEngene.search("сыр");
+        printSearchResultsSet(result4);
 
         System.out.println("Ищем по слову 'молоко'");
-        Map<String, Searchable> results5 = searchEngene.search("молоко");
-        printSearchResultsMap(results5);
+        Set<Searchable> result5 = searchEngene.search("молоко");
+        printSearchResultsSet(result5);
 
         System.out.println("\n Тестирование проверок в продуктах");
 
@@ -273,26 +274,31 @@ public class App {
         }
     }
 
-
-    private static void printSearchResultsMap(Map<String, Searchable> results) {
-        if (results.isEmpty()) {
-            System.out.println("Ничего не найдено");
-            return;
-        }
-
-        System.out.println("Найдено результатов: " + results.size());
-        System.out.println("Результаты (отсортированы по имени):");
-
-        for (Map.Entry<String, Searchable> entry : results.entrySet()) {
-            String name = entry.getKey();
-            Searchable searchable = entry.getValue();
-            System.out.println("  • " + name + " [" + searchable.getContentType() + "]");
-            System.out.println("    Поисковый термин: " +
-                    (searchable.getSearchTerm().length() > 50 ?
-                            searchable.getSearchTerm().substring(0, 50) + "..." :
-                            searchable.getSearchTerm()));
+    private static  void printSearchResultsSet(Set<Searchable> result) {
+        System.out.println("Результат поиска");
+        for (Searchable entry : result) {
+            System.out.println(entry.getStringRepresentation());
         }
     }
+//    private static void printSearchResultsMap(Map<String, Searchable> results) {
+//        if (results.isEmpty()) {
+//            System.out.println("Ничего не найдено");
+//            return;
+//        }
+//
+//        System.out.println("Найдено результатов: " + results.size());
+//        System.out.println("Результаты (отсортированы по имени):");
+//
+//        for (Map.Entry<String, Searchable> entry : results.entrySet()) {
+//            String name = entry.getKey();
+//            Searchable searchable = entry.getValue();
+//            System.out.println("  • " + name + " [" + searchable.getContentType() + "]");
+//            System.out.println("    Поисковый термин: " +
+//                    (searchable.getSearchTerm().length() > 50 ?
+//                            searchable.getSearchTerm().substring(0, 50) + "..." :
+//                            searchable.getSearchTerm()));
+//        }
+//    }
 
 
 }

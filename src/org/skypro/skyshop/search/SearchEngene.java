@@ -1,9 +1,6 @@
 package org.skypro.skyshop.search;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
+import java.util.*;
 
 public class SearchEngene {
     private final LinkedList<Searchable> searchables;
@@ -20,11 +17,11 @@ public class SearchEngene {
         searchables.add(searchable);
     }
 
-    public Map<String, Searchable> search(String searchString) {
-        Map<String, Searchable> result = new TreeMap<>();
+    public Set<Searchable> search(String searchString) {
+        Set<Searchable> result = new TreeSet<>( new SearchableComparator());
         for (Searchable searchable : searchables) {
             if (searchable.getSearchTerm().contains(searchString)) {
-                result.put(searchable.getName(), searchable);
+                result.add(searchable);
             }
         }
         return result;
