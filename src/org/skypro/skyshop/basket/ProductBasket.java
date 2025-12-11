@@ -22,33 +22,35 @@ public class ProductBasket {
     }
 
     public int getTotalCost() {
-        int total = 0;
-        for (List<Product> productList : products.values()) {
-            for (Product product : productList) {
-                total += product.getPrice();
-            }
-        }
-        return total;
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .mapToInt(Product::getPrice)
+                .sum();
+    }
+
+    private long getSpecialCount() {
+        return products.values().stream()
+                .flatMap(Collection::stream)
+                .filter(Product::isSpecial)
+                .count();
     }
 
 
     public void printBasketContents() {
         if (products.isEmpty()) {
             System.out.println("в корзине пусто ");
-        } else {
-            int specialCount = 0;
-            for (List<Product> productList : products.values()) {
-                for (Product product : productList) {
-                    System.out.println( "Содержимое корзины:" + product);
-                    if (product.isSpecial()) {
-                        specialCount++;
-                    }
-                }
-            }
+            return;
+        }else{
+        System.out.println("Содержимое корзины: ");
+        products.values().stream()
+                .flatMap(Collection::stream)
+                        .forEach(product -> System.out.println(product));
             System.out.println("Итого: " + getTotalCost());
-            System.out.println("Специальных товаров:" + specialCount);
+            System.out.println("Специальных товаров:" + getSpecialCount());
         }
     }
+
+
 
     public List<Product> deleteProductByName(String name) {
         return products.remove(name);
@@ -66,7 +68,9 @@ public class ProductBasket {
     }
 
     public int getProductCount() {
-        return products.size();
+        return (int) products.values().stream()
+                .mapToInt(List::size)
+                .sum();
     }
 
     private final List<Product> removedProducts = new ArrayList<>();
